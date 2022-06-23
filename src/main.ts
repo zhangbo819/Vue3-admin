@@ -1,4 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import * as echarts from 'echarts';
 
-createApp(App).mount('#app')
+
+const AppBase = createApp(App);
+AppBase.config.globalProperties.echarts = echarts;
+AppBase.mount('#app');
