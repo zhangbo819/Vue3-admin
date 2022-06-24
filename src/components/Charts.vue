@@ -12,6 +12,8 @@
 import { onMounted, reactive } from "vue";
 import * as echarts from "echarts";
 
+const Data = [{ name: "item1", value: "0", data: [] }];
+
 const configMap1 = reactive({
   title: {
     text: "Referer of a Website",
@@ -76,7 +78,8 @@ onMounted(() => {
   display: flex;
   flex-direction: row;
 }
-#map1, #map2 {
+#map1,
+#map2 {
   flex: 1;
   // width: 80%;
   height: 400px;
