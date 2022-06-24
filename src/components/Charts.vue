@@ -12,12 +12,49 @@
 import { onMounted, reactive } from "vue";
 import * as echarts from "echarts";
 
-const Data = [{ name: "item1", value: "0", data: [] }];
+type DataItem = {
+  name: string;
+  value: number;
+  data?: DataItem[];
+};
+const DATA = [
+  {
+    name: "item1",
+    value: 0,
+    data: [
+      { name: "subItem1", value: 10000 },
+      { name: "subItem2", value: 20000 },
+      { name: "subItem3", value: 20000 },
+    ],
+  },
+  {
+    name: "item2",
+    value: 0,
+    data: [
+      { name: "subItem1", value: 30000 },
+      { name: "subItem2", value: 20000 },
+      { name: "subItem3", value: 20000 },
+      { name: "subItem4", value: 20000 },
+    ],
+  },
+  {
+    name: "item3",
+    value: 0,
+    data: [
+      { name: "subItem1", value: 20000 },
+      { name: "subItem2", value: 20000 },
+    ],
+  },
+];
 
+const data = DATA.map((i) => {
+  i.value = i.data.reduce((r, i) => r + i.value, 0);
+  return i;
+});
 const configMap1 = reactive({
   title: {
     text: "Referer of a Website",
-    subtext: "Fake Data",
+    subtext: "sum " + data.reduce((r, i) => r + i.value, 0),
     left: "center",
   },
   tooltip: {
@@ -32,13 +69,7 @@ const configMap1 = reactive({
       name: "Access From",
       type: "pie",
       radius: "50%",
-      data: [
-        { value: 1048, name: "Search Engine" },
-        { value: 735, name: "Direct" },
-        { value: 580, name: "Email" },
-        { value: 484, name: "Union Ads" },
-        { value: 300, name: "Video Ads" },
-      ],
+      data,
       emphasis: {
         itemStyle: {
           shadowBlur: 10,
@@ -59,20 +90,47 @@ onMounted(() => {
   var myChart = echarts.init(chartDom);
 
   myChart.setOption(configMap1);
+  myChart.on("click", (e) => {
+    renderMap2(e.data as DataItem);
+  });
 });
 
-onMounted(() => {
+const renderMap2 = (data: DataItem) => {
   var chartDom = document.getElementById("map2")!;
   // console.log("chartDom", chartDom);
   var myChart = echarts.init(chartDom);
 
-  myChart.setOption(configMap1);
-});
+  myChart.setOption({
+    title: {
+      text: data.name,
+      subtext: data.value,
+      left: "center",
+    },
+    tooltip: {
+      trigger: "item",
+    },
+    series: [
+      {
+        name: "Access From",
+        type: "pie",
+        radius: "50%",
+        data: data.data,
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: "rgba(0, 0, 0, 0.5)",
+          },
+        },
+      },
+    ],
+  });
+};
 </script>
 
 <style scoped lang="less">
 .charts {
-  background: #ff08;
+  // background: #ff08;
 }
 .row {
   display: flex;
