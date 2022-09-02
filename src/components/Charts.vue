@@ -22,27 +22,27 @@ const DATA = [
     name: "item1",
     value: 0,
     data: [
-      { name: "subItem1", value: 10000 },
-      { name: "subItem2", value: 20000 },
-      { name: "subItem3", value: 20000 },
+      { name: "subItem1", value: 1 },
+      { name: "subItem2", value: 2 },
+      { name: "subItem3", value: 2 },
     ],
   },
   {
     name: "item2",
     value: 0,
     data: [
-      { name: "subItem1", value: 30000 },
-      { name: "subItem2", value: 20000 },
-      { name: "subItem3", value: 20000 },
-      { name: "subItem4", value: 20000 },
+      { name: "subItem1", value: 3 },
+      { name: "subItem2", value: 2 },
+      { name: "subItem3", value: 2 },
+      { name: "subItem4", value: 2 },
     ],
   },
   {
     name: "item3",
     value: 0,
     data: [
-      { name: "subItem1", value: 20000 },
-      { name: "subItem2", value: 20000 },
+      { name: "subItem1", value: 2 },
+      { name: "subItem2", value: 2 },
     ],
   },
 ];
