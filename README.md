@@ -26,4 +26,4 @@ pnpm run dev
 ```
 
 
-[初始化参考文章](https://juejin.cn/post/7079785777692934174)
+[外链 - 初始化参考文章](https://juejin.cn/post/7079785777692934174)
