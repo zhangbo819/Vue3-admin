@@ -11,7 +11,11 @@
 <script setup lang="ts">
 import { onBeforeMount, reactive, ref } from "vue";
 
-const props = defineProps<{ msg: string }>();
+// const props = defineProps<{ msg: string }>();
+// const props = defineProps(["msg"]);
+const props = withDefaults(defineProps<{ msg: string }>(), {
+  msg: "ssss",
+});
 
 console.log("props", props);
 
