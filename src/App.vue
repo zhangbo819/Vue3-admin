@@ -2,24 +2,14 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 // import HelloWorld from "./components/HelloWorld.vue";
-// import Charts from "./components/Charts.vue";
-import { ref } from "vue";
-import Test from "./components/Test.vue";
-
-const refA = ref("Hello");
-
-setTimeout(() => {
-  refA.value = "World";
-}, 3000);
 </script>
 
 <template>
-  <div>
-    <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
-    <!-- <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" /> -->
-    <!-- <Charts></Charts> -->
-    <Test :msg="refA"></Test>
+  <div id="nav">
+    <router-link to="/"> 首页 </router-link> |
+    <router-link to="/charts"> 关于 </router-link>
   </div>
+  <router-view />
 </template>
 
 <style>
