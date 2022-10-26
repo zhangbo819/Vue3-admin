@@ -3,13 +3,13 @@ import Home from "@/views/Home.vue";
 import Charts from "@/views/Charts/index.vue";
 
 const routes = [
+  // {
+  //   path: "/",
+  //   name: "Home",
+  //   component: Home,
+  // },
   {
     path: "/",
-    name: "Home",
-    component: Home,
-  },
-  {
-    path: "/charts",
     name: "Charts",
     component: Charts,
   },

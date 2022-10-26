@@ -2,13 +2,18 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 // import HelloWorld from "./components/HelloWorld.vue";
+
+// import { useRouter } from "vue-router";
+
+// const router = useRouter();
+// router.push("/charts");
 </script>
 
 <template>
-  <div id="nav">
+  <!-- <div class="nav">
     <router-link to="/"> 首页 </router-link> |
     <router-link to="/charts"> 图表 </router-link>
-  </div>
+  </div> -->
   <router-view />
 </template>
 
@@ -24,5 +29,11 @@
 body,
 p {
   margin: 0;
+}
+
+.nav {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-around; */
 }
 </style>
