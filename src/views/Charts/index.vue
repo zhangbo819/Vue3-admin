@@ -19,7 +19,8 @@ type DataItem = {
   data?: DataItem[];
 };
 
-const data = DATA;
+// const data = DATA;
+const data = [{ value: 0 }];
 const configMap1 = reactive({
   title: {
     text: "Total table",
