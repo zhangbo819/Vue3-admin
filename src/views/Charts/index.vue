@@ -1,6 +1,6 @@
 <template>
   <div class="charts">
-    <p>Charts 1</p>
+    <p>Charts</p>
     <div class="row">
       <div id="map1"></div>
       <div id="map2"></div>
@@ -11,50 +11,19 @@
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
 import * as echarts from "echarts";
+import DATA from "./data";
 
 type DataItem = {
   name: string;
   value: number;
   data?: DataItem[];
 };
-const DATA = [
-  {
-    name: "item1",
-    value: 0,
-    data: [
-      { name: "subItem1", value: 1 },
-      { name: "subItem2", value: 2 },
-      { name: "subItem3", value: 2 },
-    ],
-  },
-  {
-    name: "item2",
-    value: 0,
-    data: [
-      { name: "subItem1", value: 3 },
-      { name: "subItem2", value: 2 },
-      { name: "subItem3", value: 2 },
-      { name: "subItem4", value: 2 },
-    ],
-  },
-  {
-    name: "item3",
-    value: 0,
-    data: [
-      { name: "subItem1", value: 2 },
-      { name: "subItem2", value: 2 },
-    ],
-  },
-];
 
-const data = DATA.map((i) => {
-  i.value = i.data.reduce((r, i) => r + i.value, 0);
-  return i;
-});
+const data = DATA;
 const configMap1 = reactive({
   title: {
-    text: "Referer of a Website",
-    subtext: "sum " + data.reduce((r, i) => r + i.value, 0),
+    text: "Total table",
+    subtext: "sum " + data.reduce((r, i) => r + i.value!, 0),
     left: "center",
   },
   tooltip: {

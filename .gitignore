@@ -23,3 +23,5 @@ index.html
 *.njsproj
 *.sln
 *.sw?
+
+src/views/Charts/data.ts

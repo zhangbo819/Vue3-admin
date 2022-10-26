@@ -7,7 +7,7 @@
 <template>
   <div id="nav">
     <router-link to="/"> 首页 </router-link> |
-    <router-link to="/charts"> 关于 </router-link>
+    <router-link to="/charts"> 图表 </router-link>
   </div>
   <router-view />
 </template>
