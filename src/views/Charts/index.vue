@@ -66,6 +66,8 @@ const data = reactive(
   ]) as DataItem[]
 );
 
+console.log("dddd");
+
 watch(data, () => {
   LocalStore.save(data);
 });
