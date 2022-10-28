@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { ref, reactive, watch, onMounted } from "vue";
 import * as echarts from "echarts";
-import DATA from "./data";
+// import DATA from "./data";
 
 type DataItem = {
   name: string;
