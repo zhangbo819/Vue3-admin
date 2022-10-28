@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { ref, reactive, watch, onMounted } from "vue";
 import * as echarts from "echarts";
+import LocalStore from "./LocalStore";
 // import DATA from "./data";
 
 type DataItem = {
@@ -51,17 +52,24 @@ enum ActiveType {
 const active = ref<ActiveType>(ActiveType.Charts);
 const input = ref("");
 
-const data = reactive([
-  { name: "测试1", value: 4 },
-  {
-    name: "测试2",
-    value: 6,
-    data: [
-      { name: "a", value: 2 },
-      { name: "b", value: 4 },
-    ],
-  },
-]);
+const data = reactive(
+  LocalStore.get([
+    { name: "测试1", value: 4 },
+    {
+      name: "测试2",
+      value: 6,
+      data: [
+        { name: "a", value: 2 },
+        { name: "b", value: 4 },
+      ],
+    },
+  ]) as DataItem[]
+);
+
+watch(data, () => {
+  LocalStore.save(data);
+});
+
 const configMap1 = {
   title: {
     text: "Total table",
@@ -111,7 +119,7 @@ const renderMap1 = () => {
 };
 
 onMounted(() => renderMap1());
-watch(data, renderMap1);
+watch(data, () => renderMap1());
 
 const renderMap2 = (data: DataItem) => {
   var chartDom = document.getElementById("map2")!;
