@@ -7,13 +7,14 @@
 
 // const router = useRouter();
 // router.push("/charts");
+console.log("app in");
 </script>
 
 <template>
-  <!-- <div class="nav">
+  <div class="nav">
     <router-link to="/"> 首页 </router-link> |
     <router-link to="/charts"> 图表 </router-link>
-  </div> -->
+  </div>
   <router-view />
 </template>
 

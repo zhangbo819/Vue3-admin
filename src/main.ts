@@ -6,6 +6,8 @@ import vConsole from 'vconsole'
 
 const vconsole = new vConsole()
 
+console.log('main in')
+
 const AppBase = createApp(App);
 AppBase.config.globalProperties.echarts = echarts;
 AppBase
