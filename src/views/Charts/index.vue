@@ -23,7 +23,7 @@
           <input v-model="j.name" />
           <input v-model="j.value" />
         </div>
-        <button v-if="item.data" @click="handleAdd(item.data)">增加</button>
+        <button @click="handleAddChild(item)">增加</button>
       </div>
 
       <button @click="handleAdd(data)">增加</button>
@@ -68,8 +68,11 @@ const data = reactive(
 
 console.log("charts in");
 
+let timer: any;
+
 watch(data, () => {
-  LocalStore.save(data);
+  timer && clearTimeout(timer);
+  timer = setTimeout(() => LocalStore.save(data), 300);
 });
 
 const configMap1 = {
@@ -102,7 +105,14 @@ const configMap1 = {
   ],
 };
 
-const handleAdd = (data: DataItem[] = []) => {
+const handleAddChild = (item: DataItem) => {
+  if (!item.data) {
+    item.data = [];
+  }
+  handleAdd(item.data);
+};
+
+const handleAdd = (data: DataItem[]) => {
   data.push({ name: "", value: 0 });
 };
 
