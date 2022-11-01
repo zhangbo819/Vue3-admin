@@ -137,11 +137,7 @@ const renderMap1 = () => {
       sum += j.value;
     });
 
-    if (item.value) {
-      item.value = Number(item.value);
-    } else {
-      item.value = sum;
-    }
+    item.value = sum;
   });
 
   console.log("newData", newData);
