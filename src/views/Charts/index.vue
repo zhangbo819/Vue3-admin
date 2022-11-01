@@ -164,10 +164,15 @@ const renderMap2 = (data: DataItem) => {
   // console.log("chartDom", chartDom);
   var myChart = echarts.init(chartDom);
 
+  // TODO 挪走 数据统一处理
+  const subtext = data.value
+    ? data.value
+    : data.data?.reduce((r, i) => r + i.value, 0);
+
   myChart.setOption({
     title: {
       text: data.name,
-      subtext: data.value,
+      subtext,
       left: "center",
     },
     tooltip: {
