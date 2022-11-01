@@ -209,8 +209,20 @@ const renderMap2 = (data: DataItem) => {
 }
 .row {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  // justify-content: center;
+  align-items: center;
+  height: 80vh;
+  // height: auto;
 }
+
+#map1,
+#map2 {
+  flex: 1;
+  width: 80%;
+  height: 500px;
+}
+
 .Input {
   display: flex;
   flex-direction: column;
@@ -218,11 +230,5 @@ const renderMap2 = (data: DataItem) => {
   .input-item {
     margin: 10px 0;
   }
-}
-#map1,
-#map2 {
-  flex: 1;
-  // width: 80%;
-  height: 400px;
 }
 </style>
