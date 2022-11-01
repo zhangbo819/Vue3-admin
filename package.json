@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
+    "start": "vite",
     "dev": "vite",
     "build": "rm -rf docs && vue-tsc --noEmit && vite build --base=/Vue3-admin/",
     "preview": "vite preview",

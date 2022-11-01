@@ -32,10 +32,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from "vue";
+import { ref, reactive, watch, onMounted, toRaw } from "vue";
 import * as echarts from "echarts";
 import LocalStore from "./LocalStore";
 // import DATA from "./data";
+
+// TODO 有空整体优化下
 
 type DataItem = {
   name: string;
@@ -66,13 +68,15 @@ const data = reactive(
   ]) as DataItem[]
 );
 
-console.log("charts in");
-
 let timer: any;
 
 watch(data, () => {
   timer && clearTimeout(timer);
-  timer = setTimeout(() => LocalStore.save(data), 300);
+  timer = setTimeout(() => {
+    console.log("timer in");
+    renderMap1();
+    LocalStore.save(data);
+  }, 300);
 });
 
 const configMap1 = {
@@ -124,6 +128,29 @@ const renderMap1 = () => {
   // console.log("chartDom", chartDom);
   var myChart = echarts.init(chartDom);
 
+  const newData = toRaw(data);
+
+  newData.forEach((item) => {
+    let sum = 0;
+    item.data?.forEach((j) => {
+      j.value = Number(j.value);
+      sum += j.value;
+    });
+
+    if (item.value) {
+      item.value = Number(item.value);
+    } else {
+      item.value = sum;
+    }
+  });
+
+  console.log("newData", newData);
+
+  configMap1.title.subtext = "sum " + newData.reduce((r, i) => r + i.value!, 0);
+  configMap1.series[0].data = newData;
+
+  console.log("configMap1", configMap1);
+
   myChart.setOption(configMap1);
   myChart.on("click", (e) => {
     renderMap2(e.data as DataItem);
@@ -131,7 +158,6 @@ const renderMap1 = () => {
 };
 
 onMounted(() => renderMap1());
-watch(data, () => renderMap1());
 
 const renderMap2 = (data: DataItem) => {
   var chartDom = document.getElementById("map2")!;
