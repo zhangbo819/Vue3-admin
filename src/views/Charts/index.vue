@@ -131,13 +131,14 @@ const renderMap1 = () => {
   const newData = toRaw(data);
 
   newData.forEach((item) => {
-    let sum = 0;
-    item.data?.forEach((j) => {
-      j.value = Number(j.value);
-      sum += j.value;
-    });
-
-    item.value = sum;
+    // 有子集 则累加
+    if (item.data) {
+      item.value = item.data.reduce((r, j) => {
+        j.value = Number(j.value);
+        r += j.value;
+        return r;
+      }, 0);
+    }
   });
 
   console.log("newData", newData);
