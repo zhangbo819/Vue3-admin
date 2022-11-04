@@ -13,7 +13,6 @@
     <!-- 着急写的太乱了 有时间重构下 -->
     <div v-show="active === ActiveType.Input" class="Input">
       <!-- {{ input }} -->
-      <pre>{{ data }}</pre>
 
       <div v-for="item in data" :key="item.name" class="input-item">
         <input v-model="item.name" />
@@ -26,7 +25,9 @@
         <button @click="handleAddChild(item)">增加</button>
       </div>
 
-      <button @click="handleAdd(data)">增加</button>
+      <button @click="handleAdd(data)">增加大类</button>
+
+      <pre>{{ data }}</pre>
     </div>
   </div>
 </template>
@@ -128,8 +129,12 @@ const renderMap1 = () => {
   // console.log("chartDom", chartDom);
   var myChart = echarts.init(chartDom);
 
-  const newData = toRaw(data);
+  const newData = toRaw(data).filter(
+    (item) => item.data || item.value || item.name // 这三项全没有则隐藏
+  );
 
+  // 渲染前处理一下数据
+  let sum = 0;
   newData.forEach((item) => {
     // 有子集 则累加
     if (item.data) {
@@ -139,11 +144,13 @@ const renderMap1 = () => {
         return r;
       }, 0);
     }
+
+    sum += item.value;
   });
 
   console.log("newData", newData);
 
-  configMap1.title.subtext = "sum " + newData.reduce((r, i) => r + i.value!, 0);
+  configMap1.title.subtext = "sum " + sum;
   configMap1.series[0].data = newData;
 
   console.log("configMap1", configMap1);
