@@ -16,11 +16,11 @@
 
       <div v-for="item in data" :key="item.name" class="input-item">
         <input v-model="item.name" />
-        <input v-model="item.value" type="tel" pattern="number" />
+        <input v-model="item.value" type="number" pattern="number" />
 
         <div v-for="j in item.data" :key="j.name">
           <input v-model="j.name" />
-          <input v-model="j.value" type="tel" pattern="number" />
+          <input v-model="j.value" type="number" pattern="number" />
         </div>
         <button @click="handleAddChild(item)">增加</button>
       </div>
