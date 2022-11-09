@@ -62,7 +62,7 @@ enum ActiveType {
 
 // const data = DATA;
 const active = ref<ActiveType>(ActiveType.Charts);
-const input = ref("");
+// const input = ref("");
 
 const data = reactive(
   LocalStore.get([
@@ -83,6 +83,7 @@ let timer: any;
 watch(data, () => {
   timer && clearTimeout(timer);
   timer = setTimeout(() => {
+    // TODO 数据处理
     console.log("timer in");
     renderMap1();
     LocalStore.save(data);
@@ -98,6 +99,7 @@ const configMap1 = {
   tooltip: {
     trigger: "item",
   },
+  // TODO legend
   // legend: {
   //   orient: "vertical",
   //   left: "left",
