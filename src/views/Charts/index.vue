@@ -14,15 +14,22 @@
     <div v-show="active === ActiveType.Input" class="Input">
       <!-- {{ input }} -->
 
-      <div v-for="item in data" :key="item.name" class="input-item">
+      <div
+        v-for="(item, index) of data"
+        :key="'item_' + index"
+        class="input-item"
+      >
         <input v-model="item.name" />
         <!-- <input v-model="item.value" type="number" pattern="number" /> -->
         <input v-model="item.value" type="text" inputmode="decimal" />
 
-        <div v-for="j in item.data" :key="j.name">
-          <input v-model="j.name" />
-          <!-- <input v-model="j.value" type="number" pattern="number" /> -->
-          <input v-model="j.value" type="text" inputmode="decimal" />
+        <div
+          v-for="(childItem, childIndex) of item.data"
+          :key="'childItem' + index + childIndex"
+        >
+          <input v-model="childItem.name" />
+          <!-- <input v-model="childItem.value" type="number" pattern="number" /> -->
+          <input v-model="childItem.value" type="text" inputmode="decimal" />
         </div>
         <button @click="handleAddChild(item)">增加</button>
       </div>
