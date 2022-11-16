@@ -6,14 +6,14 @@
 // import { useRouter } from "vue-router";
 
 // const router = useRouter();
-// router.push("/charts");
-console.log("app in");
+// router.push("/DatePicker");
+// console.log("app in");
 </script>
 
 <template>
   <div class="nav">
     <router-link to="/"> 首页 </router-link> |
-    <!-- <router-link to="/charts"> 图表 </router-link> -->
+    <!-- <router-link to="/DatePicker"> 时间框 </router-link> -->
   </div>
   <router-view />
 </template>
