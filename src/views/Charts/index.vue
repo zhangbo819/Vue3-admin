@@ -141,7 +141,12 @@ const renderMap1 = () => {
   var myChart = echarts.init(chartDom);
 
   const newData = toRaw(data).filter(
-    (item) => item.data || item.value || item.name // 这三项全没有则隐藏
+    (item) =>
+      (item.data
+        ? item.data.reduce((r, i) => r + i.value, 0) // 有子类时，子类也必须有值
+        : false) ||
+      item.value ||
+      item.name // 这三项全没有则隐藏
   );
 
   // 渲染前处理一下数据
