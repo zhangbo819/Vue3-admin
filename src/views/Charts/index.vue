@@ -142,9 +142,7 @@ const renderMap1 = () => {
 
   const newData = toRaw(data).filter(
     (item) =>
-      (item.data
-        ? item.data.reduce((r, i) => r + i.value, 0) // 有子类时，子类也必须有值
-        : false) ||
+      (item.data && item.data.reduce((r, i) => r + i.value, 0)) || // 有子类时，子类也必须有值
       item.value ||
       item.name // 这三项全没有则隐藏
   );
