@@ -161,6 +161,8 @@ const renderMap1 = () => {
 
     sum += item.value;
   });
+  // 左小右大排序
+  newData.sort((a, b) => b.value - a.value);
 
   console.log("newData", newData);
 
