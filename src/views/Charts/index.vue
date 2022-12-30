@@ -159,7 +159,7 @@ const renderMap1 = () => {
       }, 0);
     }
 
-    sum += item.value;
+    sum += Number(item.value);
   });
   // 左小右大排序
   newData.sort((a, b) => b.value - a.value);
