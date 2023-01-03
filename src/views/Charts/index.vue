@@ -166,7 +166,7 @@ const renderMap1 = () => {
 
   console.log("newData", newData);
 
-  configMap1.title.subtext = "sum " + sum;
+  configMap1.title.subtext = "sum " + sum.toFixed(2);
   configMap1.series[0].data = newData;
 
   console.log("configMap1", configMap1);
