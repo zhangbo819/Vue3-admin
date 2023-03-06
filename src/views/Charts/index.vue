@@ -135,7 +135,7 @@ const handleAddChild = (item: SumData) => {
   if (!item.data) {
     item.data = [];
   }
-  data.push({ name: "", value: 0 });
+  item.data.push({ name: "", value: 0 });
 };
 
 // type EChartsOption = echarts.EChartsOption;
