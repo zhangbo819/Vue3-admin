@@ -5,11 +5,13 @@
       <p @click="active = ActiveType.Input">Input</p>
     </div>
 
+    <!-- 地图 -->
     <div v-show="active === ActiveType.Charts" class="row">
-      <div id="map1"></div>
-      <div id="map2"></div>
+      <div id="map-sum" class="map"></div>
+      <div id="map-item" class="map"></div>
     </div>
 
+    <!-- 输入 tab -->
     <!-- 着急写的太乱了 有时间重构下 -->
     <div v-show="active === ActiveType.Input" class="Input">
       <!-- {{ input }} -->
@@ -49,11 +51,17 @@ import LocalStore from "./LocalStore";
 
 // TODO 有空整体优化下
 
-type DataItem = {
+interface ItemData {
   name: string;
   value: number;
-  data?: DataItem[];
-};
+  data?: { name: string; value: number }[];
+}
+
+interface SumData {
+  name: string;
+  value: number;
+  data?: ItemData[];
+}
 
 enum ActiveType {
   Charts = "Charts",
@@ -75,7 +83,7 @@ const data = reactive(
         { name: "b", value: 4 },
       ],
     },
-  ]) as DataItem[]
+  ]) as SumData[]
 );
 
 let timer: any;
@@ -83,9 +91,7 @@ let timer: any;
 watch(data, () => {
   timer && clearTimeout(timer);
   timer = setTimeout(() => {
-    // TODO 数据处理
-    console.log("timer in");
-    renderMap1();
+    renderSumMap();
     LocalStore.save(data);
   }, 300);
 });
@@ -121,49 +127,78 @@ const configMap1 = {
   ],
 };
 
-const handleAddChild = (item: DataItem) => {
+const handleAdd = (data: SumData[]) => {
+  data.push({ name: "", value: 0, data: [] });
+};
+
+const handleAddChild = (item: SumData) => {
   if (!item.data) {
     item.data = [];
   }
-  handleAdd(item.data);
-};
-
-const handleAdd = (data: DataItem[]) => {
   data.push({ name: "", value: 0 });
 };
 
 // type EChartsOption = echarts.EChartsOption;
 // const ctx = getCurrentInstance();
 
-const renderMap1 = () => {
-  var chartDom = document.getElementById("map1")!;
-  // console.log("chartDom", chartDom);
-  var myChart = echarts.init(chartDom);
-
+// 处理所有数据
+const _formatData = () => {
   const newData = toRaw(data).filter(
     (item) =>
       (item.data && item.data.reduce((r, i) => r + i.value, 0)) || // 有子类时，子类也必须有值
       +item.value // 这两项全没有则隐藏
   );
 
-  // 渲染前处理一下数据
-  let sum = 0;
+  let sum = 0; // 总值
+
   newData.forEach((item) => {
-    // 有子集 则累加
     if (item.data) {
-      item.value = item.data.reduce((r, j) => {
-        j.value = Number(j.value);
-        r += j.value;
-        return r;
-      }, 0);
+      let value = 0;
+
+      item.data = item.data
+        .filter((item) => item.value) // 1 过滤掉为空项
+        .map((son) => {
+          // 2 根据子集的数目重新计算父级
+          value = Number(son.value);
+
+          return son;
+        });
+
+      // 左小右大排序
+      item.data.sort((a, b) => b.value - a.value);
+
+      item.value = value;
+    } else {
+      // 没有子集，给一个子集
+      item.data = [{ ...item }];
     }
 
     sum += Number(item.value);
   });
+
   // 左小右大排序
   newData.sort((a, b) => b.value - a.value);
 
+  //  TODO 将最小的几个合并
+  // const smallTarget = sum / 5; // 小于总值的五分之一
+  // for (let i = newData.length - 1; i >= 0; i--) {
+  //   const item = newData[i];
+
+  //   if (item.data?.length === 1) {
+  //   }
+  // }
+
   console.log("newData", newData);
+  return { newData, sum };
+};
+
+// 渲染总体的 Map
+const renderSumMap = () => {
+  var chartDom = document.getElementById("map-sum")!;
+  // console.log("chartDom", chartDom);
+  var myChart = echarts.init(chartDom);
+
+  const { newData, sum } = _formatData();
 
   configMap1.title.subtext = "sum " + sum.toFixed(2);
   configMap1.series[0].data = newData;
@@ -172,26 +207,21 @@ const renderMap1 = () => {
 
   myChart.setOption(configMap1);
   myChart.on("click", (e) => {
-    renderMap2(e.data as DataItem);
+    renderItemMap(e.data as SumData);
   });
 };
 
-onMounted(() => renderMap1());
+onMounted(() => renderSumMap());
 
-const renderMap2 = (data: DataItem) => {
-  var chartDom = document.getElementById("map2")!;
+const renderItemMap = (data: SumData) => {
+  var chartDom = document.getElementById("map-item")!;
   // console.log("chartDom", chartDom);
   var myChart = echarts.init(chartDom);
-
-  // TODO 挪走 数据统一处理
-  const subtext = data.value
-    ? data.value
-    : data.data?.reduce((r, i) => r + i.value, 0);
 
   myChart.setOption({
     title: {
       text: data.name,
-      subtext,
+      subtext: data.value, // 副标题显示总数
       left: "center",
     },
     tooltip: {
@@ -240,8 +270,7 @@ const renderMap2 = (data: DataItem) => {
   // height: auto;
 }
 
-#map1,
-#map2 {
+.map {
   flex: 1;
   width: 80%;
   height: 500px;
