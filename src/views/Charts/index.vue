@@ -159,7 +159,7 @@ const _formatData = () => {
         .filter((item) => item.value) // 1 过滤掉为空项
         .map((son) => {
           // 2 根据子集的数目重新计算父级
-          value = Number(son.value);
+          value += Number(son.value);
 
           return son;
         });
