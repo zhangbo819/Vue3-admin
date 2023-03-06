@@ -47,26 +47,11 @@
 import { ref, reactive, watch, onMounted, toRaw } from "vue";
 import * as echarts from "echarts";
 import LocalStore from "./LocalStore";
+import { ActiveType, SumData } from "./interface";
+import { _formatOriginalData, _formatShowData } from "./util";
 // import DATA from "./data";
 
 // TODO 有空整体优化下
-
-interface ItemData {
-  name: string;
-  value: number;
-  data?: { name: string; value: number }[];
-}
-
-interface SumData {
-  name: string;
-  value: number;
-  data?: ItemData[];
-}
-
-enum ActiveType {
-  Charts = "Charts",
-  Input = "Input",
-}
 
 // const data = DATA;
 const active = ref<ActiveType>(ActiveType.Charts);
@@ -89,10 +74,12 @@ const data = reactive(
 let timer: any;
 
 watch(data, () => {
+  // console.log("watch data", data);
+  const formatData = _formatOriginalData(toRaw(data));
   timer && clearTimeout(timer);
   timer = setTimeout(() => {
-    renderSumMap();
-    LocalStore.save(data);
+    renderSumMap(formatData);
+    LocalStore.save(formatData);
   }, 300);
 });
 
@@ -128,7 +115,7 @@ const configMap1 = {
 };
 
 const handleAdd = (data: SumData[]) => {
-  data.push({ name: "", value: 0, data: [] });
+  data.push({ name: "", value: 0 });
 };
 
 const handleAddChild = (item: SumData) => {
@@ -136,74 +123,24 @@ const handleAddChild = (item: SumData) => {
     item.data = [];
   }
   item.data.push({ name: "", value: 0 });
+  item.data = [...item.data]; // 触发更新
 };
 
 // type EChartsOption = echarts.EChartsOption;
 // const ctx = getCurrentInstance();
 
-// 处理所有数据
-const _formatData = () => {
-  const newData = toRaw(data).filter(
-    (item) =>
-      (item.data && item.data.reduce((r, i) => r + i.value, 0)) || // 有子类时，子类也必须有值
-      +item.value // 这两项全没有则隐藏
-  );
-
-  let sum = 0; // 总值
-
-  newData.forEach((item) => {
-    if (item.data) {
-      let value = 0;
-
-      item.data = item.data
-        .filter((item) => item.value) // 1 过滤掉为空项
-        .map((son) => {
-          // 2 根据子集的数目重新计算父级
-          value += Number(son.value);
-
-          return son;
-        });
-
-      // 左小右大排序
-      item.data.sort((a, b) => b.value - a.value);
-
-      item.value = value;
-    } else {
-      // 没有子集，给一个子集
-      item.data = [{ ...item }];
-    }
-
-    sum += Number(item.value);
-  });
-
-  // 左小右大排序
-  newData.sort((a, b) => b.value - a.value);
-
-  //  TODO 将最小的几个合并
-  // const smallTarget = sum / 5; // 小于总值的五分之一
-  // for (let i = newData.length - 1; i >= 0; i--) {
-  //   const item = newData[i];
-
-  //   if (item.data?.length === 1) {
-  //   }
-  // }
-
-  console.log("newData", newData);
-  return { newData, sum };
-};
-
 // 渲染总体的 Map
-const renderSumMap = () => {
+const renderSumMap = (formatData: SumData[]) => {
   var chartDom = document.getElementById("map-sum")!;
   // console.log("chartDom", chartDom);
   var myChart = echarts.init(chartDom);
 
-  const { newData, sum } = _formatData();
+  const { newData, sum } = _formatShowData(formatData);
 
   configMap1.title.subtext = "sum " + sum.toFixed(2);
   configMap1.series[0].data = newData;
 
-  console.log("configMap1", configMap1);
+  // console.log("configMap1", configMap1);
 
   myChart.setOption(configMap1);
   myChart.on("click", (e) => {
@@ -211,7 +148,7 @@ const renderSumMap = () => {
   });
 };
 
-onMounted(() => renderSumMap());
+onMounted(() => renderSumMap(data));
 
 const renderItemMap = (data: SumData) => {
   var chartDom = document.getElementById("map-item")!;
