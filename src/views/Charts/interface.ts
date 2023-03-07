@@ -6,12 +6,12 @@ export enum ActiveType {
 
 export interface SumData {
   name: string;
-  value: number;
+  value: number | string;
   data?: ItemData[];
 }
 
 export interface ItemData {
   name: string;
-  value: number;
-  data?: { name: string; value: number }[];
+  value: number | string;
+  data?: { name: string; value: number | string }[];
 }

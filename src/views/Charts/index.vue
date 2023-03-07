@@ -48,7 +48,7 @@ import { ref, reactive, watch, onMounted, toRaw } from "vue";
 import * as echarts from "echarts";
 import LocalStore from "./LocalStore";
 import { ActiveType, SumData } from "./interface";
-import { _formatOriginalData, _formatShowData } from "./util";
+import { formatOriginalData, formatShowData } from "./util";
 // import DATA from "./data";
 
 // TODO 有空整体优化下
@@ -75,7 +75,7 @@ let timer: any;
 
 watch(data, () => {
   // console.log("watch data", data);
-  const formatData = _formatOriginalData(toRaw(data));
+  const formatData = formatOriginalData(toRaw(data));
   timer && clearTimeout(timer);
   timer = setTimeout(() => {
     renderSumMap(formatData);
@@ -86,7 +86,7 @@ watch(data, () => {
 const configMap1 = {
   title: {
     text: "Total table",
-    subtext: "sum " + data.reduce((r, i) => r + i.value!, 0),
+    subtext: "sum " + data.reduce((r, i) => r + Number(i.value), 0),
     left: "center",
   },
   tooltip: {
@@ -135,7 +135,7 @@ const renderSumMap = (formatData: SumData[]) => {
   // console.log("chartDom", chartDom);
   var myChart = echarts.init(chartDom);
 
-  const { newData, sum } = _formatShowData(formatData);
+  const { newData, sum } = formatShowData(formatData);
 
   configMap1.title.subtext = "sum " + sum.toFixed(2);
   configMap1.series[0].data = newData;
