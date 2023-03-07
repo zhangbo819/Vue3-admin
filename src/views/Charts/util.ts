@@ -59,7 +59,7 @@ export const formatShowData = (formatData: SumData[]) => {
 
 // 展示优化 将最小的几个合并成一个
 function _mergeSmallData(newData: SumData[], sum: number) {
-  const smallTarget = sum / 8; // 小于总值的8分之一
+  const smallTarget = sum / 10; // 小于总值的10分之一
   let res = 0, mergeArr: SumData[] = [];
 
   for (let i = newData.length - 1; i >= 0; i--) {
@@ -80,7 +80,9 @@ function _mergeSmallData(newData: SumData[], sum: number) {
   mergeArr = mergeArr.reduce((r, i) => {
     if (i.data?.length) {
       i.data.forEach((j) => {
-        r.push({ ...j, name: `${i.name} ${j.name}` })
+        if (j.value) {
+          r.push({ ...j, name: `${i.name} ${j.name}` })
+        }
       })
     } else {
       r.push(i)
