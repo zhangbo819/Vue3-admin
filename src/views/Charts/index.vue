@@ -1,19 +1,19 @@
 <template>
   <div class="charts">
-    <div class="title">
+    <header class="title">
       <p @click="active = ActiveType.Charts">Charts</p>
       <p @click="active = ActiveType.Input">Input</p>
-    </div>
+    </header>
 
     <!-- 地图 -->
-    <div v-show="active === ActiveType.Charts" class="row">
+    <section v-show="active === ActiveType.Charts" class="row">
       <div id="map-sum" class="map"></div>
       <div id="map-item" class="map"></div>
-    </div>
+    </section>
 
     <!-- 输入 tab -->
     <!-- 着急写的太乱了 有时间重构下 -->
-    <div v-show="active === ActiveType.Input" class="Input">
+    <section v-show="active === ActiveType.Input" class="Input">
       <!-- {{ input }} -->
 
       <div
@@ -36,10 +36,13 @@
         <button @click="handleAddChild(item)">增加</button>
       </div>
 
-      <button @click="handleAdd(data)">增加大类</button>
+      <div class="tools">
+        <button @click="handleAdd(data)">增加大类</button>
+        <button @click="handleCleanUp">整理</button>
+      </div>
 
       <pre>{{ data }}</pre>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -181,6 +184,11 @@ const renderItemMap = (data: SumData) => {
     ],
   });
 };
+
+const handleCleanUp = () => {
+  // 大类排序
+  data.sort((a, b) => Number(b.value) - Number(a.value));
+};
 </script>
 
 <style scoped lang="less">
@@ -219,6 +227,21 @@ const renderItemMap = (data: SumData) => {
   align-items: center;
   .input-item {
     margin: 10px 0;
+    button {
+      display: block;
+      // margin: 0 auto;
+    }
+  }
+
+  .tools {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    button + button {
+      margin-left: 10px;
+    }
   }
 }
 </style>
