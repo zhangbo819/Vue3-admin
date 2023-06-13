@@ -60,18 +60,22 @@ import { formatOriginalData, formatShowData } from "./util";
 const active = ref<ActiveType>(ActiveType.Charts);
 // const input = ref("");
 
-const data = reactive(
+const data: SumData[] = reactive(
   LocalStore.get([
     { name: "测试1", value: 4 },
     {
       name: "测试2",
-      value: 6,
+      value: 0,
       data: [
-        { name: "a", value: 2 },
-        { name: "b", value: 4 },
+        { name: "A", value: 2 },
+        { name: "C", value: 4 },
       ],
     },
-  ]) as SumData[]
+    {
+      name: '测试3',
+      value: 0.1
+    }
+  ])
 );
 
 let timer: any;
@@ -151,7 +155,10 @@ const renderSumMap = (formatData: SumData[]) => {
   });
 };
 
-onMounted(() => renderSumMap(data));
+onMounted(() => {
+  const formatData = formatOriginalData(toRaw(data));
+  renderSumMap(formatData)
+});
 
 const renderItemMap = (data: SumData) => {
   var chartDom = document.getElementById("map-item")!;
