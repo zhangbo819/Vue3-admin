@@ -20,10 +20,7 @@
     </div>
     <div class="bottomTooltip">
       <ElInput class="input" v-model="inputValue" @keyup.enter="sendMessage" />
-      <ElButton
-        class="btn"
-        @click="sendMessage"
-        :loading="loading"
+      <ElButton class="btn" @click="sendMessage" :loading="loading"
         >发送</ElButton
       >
     </div>
@@ -34,9 +31,10 @@
 import { onMounted, onUnmounted, ref } from "vue";
 import { ElButton, ElInput, ElMessage } from "element-plus";
 import axios from "axios";
+import { getList } from "./api";
 
-const local = "yry";
-const remote = "zzb";
+const local = "local";
+const remote = "remote";
 
 interface DataType {
   time: string | number;
@@ -55,11 +53,10 @@ const startTimer = () => {
   timer.value = setTimeout(async () => {
     // TODO api
     dataLoading.value = true;
-    // const url = ''
-    // await axios.get(url, { form: user.value, time: Date.now()  })
+    // await getList({ form: user.value, time: Date.now() });
     const res = [
-      { time: 1686799984400, msg: "hello zzb", form: local },
-      { time: 1686799994400, msg: "hello yry", form: remote },
+      { time: 1686799984400, msg: "hello remote", form: local },
+      { time: 1686799994400, msg: "hello local", form: remote },
       {
         time: 1686799994400,
         msg: "几拿地价佛is啊就是滴飞机束带结发is觉得佛i就是扫地机佛山降低佛山街司法鉴定哦if时间",

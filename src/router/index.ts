@@ -21,8 +21,8 @@ const routes = [
     component: DatePicker,
   },
   {
-    path: "/yry",
-    name: "yry",
+    path: "/Chat",
+    name: "Chat",
     component: Chat,
   },
 ];
