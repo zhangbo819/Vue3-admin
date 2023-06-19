@@ -156,12 +156,15 @@ const renderSumMap = (formatData: SumData[]) => {
   // console.log("chartDom", chartDom);
   var myChart = echarts.init(chartDom);
 
-  let { newData, sum } = formatShowData(formatData);
+  const { newData, sum } = formatShowData(formatData);
+  let flatData: SumData[] = [];
 
   if (isFlat.value) {
-    newData = newData.reduce((r, i) => {
+    flatData = newData.reduce((r, i) => {
       if (i.data) {
-        r.push(...i.data);
+        i.data.forEach((son) => {
+          r.push({ name: son.name, value: son.value, data: [...i.data!] });
+        });
       } else {
         r.push(i);
       }
@@ -170,7 +173,7 @@ const renderSumMap = (formatData: SumData[]) => {
   }
 
   configMap1.title.subtext = "sum " + sum.toFixed(2);
-  configMap1.series[0].data = newData;
+  configMap1.series[0].data = isFlat.value ? flatData : newData;
 
   // console.log("configMap1", configMap1);
 
