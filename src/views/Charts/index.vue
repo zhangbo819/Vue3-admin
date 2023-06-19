@@ -4,6 +4,9 @@
       <p @click="active = ActiveType.Charts">Charts</p>
       <p @click="active = ActiveType.Input">Input</p>
     </header>
+    <header class="toolbar">
+      <ElButton @click="toggleFlat">{{ isFlat ? "恢复" : "平铺" }}</ElButton>
+    </header>
 
     <!-- 地图 -->
     <section v-show="active === ActiveType.Charts" class="row">
@@ -48,6 +51,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch, onMounted, toRaw } from "vue";
+import { ElButton } from "element-plus";
 import * as echarts from "echarts";
 import LocalStore from "./LocalStore";
 import { ActiveType, SumData } from "./interface";
@@ -72,9 +76,9 @@ const data: SumData[] = reactive(
       ],
     },
     {
-      name: '测试3',
-      value: 0.1
-    }
+      name: "测试3",
+      value: 0.1,
+    },
   ])
 );
 
@@ -136,13 +140,34 @@ const handleAddChild = (item: SumData) => {
 // type EChartsOption = echarts.EChartsOption;
 // const ctx = getCurrentInstance();
 
+// 平铺 收缩逻辑
+const isFlat = ref(false);
+const toggleFlat = () => {
+  isFlat.value = !isFlat.value;
+};
+watch(isFlat, () => {
+  const formatData = formatOriginalData(toRaw(data));
+  renderSumMap(formatData);
+});
+
 // 渲染总体的 Map
 const renderSumMap = (formatData: SumData[]) => {
   var chartDom = document.getElementById("map-sum")!;
   // console.log("chartDom", chartDom);
   var myChart = echarts.init(chartDom);
 
-  const { newData, sum } = formatShowData(formatData);
+  let { newData, sum } = formatShowData(formatData);
+
+  if (isFlat.value) {
+    newData = newData.reduce((r, i) => {
+      if (i.data) {
+        r.push(...i.data);
+      } else {
+        r.push(i);
+      }
+      return r;
+    }, [] as SumData[]);
+  }
 
   configMap1.title.subtext = "sum " + sum.toFixed(2);
   configMap1.series[0].data = newData;
@@ -157,7 +182,7 @@ const renderSumMap = (formatData: SumData[]) => {
 
 onMounted(() => {
   const formatData = formatOriginalData(toRaw(data));
-  renderSumMap(formatData)
+  renderSumMap(formatData);
 });
 
 const renderItemMap = (data: SumData) => {
@@ -211,6 +236,13 @@ const handleCleanUp = () => {
       font-weight: bold;
       cursor: pointer;
     }
+  }
+
+  .toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 8px 0;
   }
 }
 .row {
