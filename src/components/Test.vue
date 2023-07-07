@@ -52,4 +52,3 @@ console.log(
 );
 </script>
 
-<style scoped></style>

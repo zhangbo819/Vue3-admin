@@ -28,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+// move to ChatFullStack
 import { onMounted, onUnmounted, ref } from "vue";
 import { ElButton, ElInput, ElMessage } from "element-plus";
 import axios from "axios";
@@ -173,6 +174,6 @@ const changeUser = () => {
   }
   .btn {
     margin-right: 12px;
-  }
+  } 
 }
 </style>

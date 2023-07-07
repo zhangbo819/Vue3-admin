@@ -12,9 +12,9 @@
 
 <template>
   <div class="nav">
-    <router-link to="/"> 首页 </router-link> |
-    <!-- <router-link to="/DatePicker"> 时间框 </router-link> -->
-    <router-link to="/Chat"> Chat </router-link>
+    <router-link to="/"> 首页 </router-link>
+    <!-- | <router-link to="/DatePicker"> 时间框 </router-link> -->
+    <!-- | <router-link to="/Chat"> Chat </router-link> -->
   </div>
   <router-view />
 </template>
