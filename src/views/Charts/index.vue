@@ -4,6 +4,9 @@
       <p @click="active = ActiveType.Charts">Charts</p>
       <p @click="active = ActiveType.Input">Input</p>
     </header>
+    <header class="toolbar">
+      <ElButton @click="toggleFlat">{{ isFlat ? "恢复" : "平铺" }}</ElButton>
+    </header>
 
     <!-- 地图 -->
     <section v-show="active === ActiveType.Charts" class="row">
@@ -48,6 +51,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, watch, onMounted, toRaw } from "vue";
+import { ElButton } from "element-plus";
 import * as echarts from "echarts";
 import LocalStore from "./LocalStore";
 import { ActiveType, SumData } from "./interface";
@@ -60,18 +64,22 @@ import { formatOriginalData, formatShowData } from "./util";
 const active = ref<ActiveType>(ActiveType.Charts);
 // const input = ref("");
 
-const data = reactive(
+const data: SumData[] = reactive(
   LocalStore.get([
     { name: "测试1", value: 4 },
     {
       name: "测试2",
-      value: 6,
+      value: 0,
       data: [
-        { name: "a", value: 2 },
-        { name: "b", value: 4 },
+        { name: "A", value: 2 },
+        { name: "C", value: 4 },
       ],
     },
-  ]) as SumData[]
+    {
+      name: "测试3",
+      value: 0.1,
+    },
+  ])
 );
 
 let timer: any;
@@ -132,6 +140,16 @@ const handleAddChild = (item: SumData) => {
 // type EChartsOption = echarts.EChartsOption;
 // const ctx = getCurrentInstance();
 
+// 平铺 收缩逻辑
+const isFlat = ref(false);
+const toggleFlat = () => {
+  isFlat.value = !isFlat.value;
+};
+watch(isFlat, () => {
+  const formatData = formatOriginalData(toRaw(data));
+  renderSumMap(formatData);
+});
+
 // 渲染总体的 Map
 const renderSumMap = (formatData: SumData[]) => {
   var chartDom = document.getElementById("map-sum")!;
@@ -139,9 +157,23 @@ const renderSumMap = (formatData: SumData[]) => {
   var myChart = echarts.init(chartDom);
 
   const { newData, sum } = formatShowData(formatData);
+  let flatData: SumData[] = [];
+
+  if (isFlat.value) {
+    flatData = newData.reduce((r, i) => {
+      if (i.data) {
+        i.data.forEach((son) => {
+          r.push({ name: son.name, value: son.value, data: [...i.data!] });
+        });
+      } else {
+        r.push(i);
+      }
+      return r;
+    }, [] as SumData[]);
+  }
 
   configMap1.title.subtext = "sum " + sum.toFixed(2);
-  configMap1.series[0].data = newData;
+  configMap1.series[0].data = isFlat.value ? flatData : newData;
 
   // console.log("configMap1", configMap1);
 
@@ -151,7 +183,10 @@ const renderSumMap = (formatData: SumData[]) => {
   });
 };
 
-onMounted(() => renderSumMap(data));
+onMounted(() => {
+  const formatData = formatOriginalData(toRaw(data));
+  renderSumMap(formatData);
+});
 
 const renderItemMap = (data: SumData) => {
   var chartDom = document.getElementById("map-item")!;
@@ -204,6 +239,13 @@ const handleCleanUp = () => {
       font-weight: bold;
       cursor: pointer;
     }
+  }
+
+  .toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 8px 0;
   }
 }
 .row {

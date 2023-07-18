@@ -76,6 +76,14 @@ function _mergeSmallData(newData: SumData[], sum: number) {
   // 没有结果，return
   if (!mergeArr.length) return
 
+  // 小于三个，不合并
+  if (mergeArr.length < 3) {
+    mergeArr.reverse().forEach(item => {
+      newData.push(item)
+    })
+    return
+  }
+
   // 把 mergeArr 里的 data 中的元素拆分
   mergeArr = mergeArr.reduce((r, i) => {
     if (i.data?.length) {

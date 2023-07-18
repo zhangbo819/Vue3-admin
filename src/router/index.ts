@@ -3,6 +3,7 @@ import Home from "@/views/Home.vue";
 import Charts from "@/views/Charts/index.vue";
 import DatePicker from "@/views/DatePicker/index.vue";
 import AutoSearch from "@/views/AutoSearch/index.vue";
+import Chat from "@/views/Chat/index.vue";
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: "/AutoSearch",
     name: "AutoSearch",
     component: AutoSearch,
+  },
+  {
+    path: "/Chat",
+    name: "Chat",
+    component: Chat,
   },
 ];
 
